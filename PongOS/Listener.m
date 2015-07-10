@@ -118,7 +118,7 @@ static OSStatus recordingCallback(void *inRefCon, AudioUnitRenderActionFlags *io
     _paddleFilterBufferList->mBuffers[0].mData = malloc(sizeof(float) * _paddleFrames);
     
     // Read into buffers
-    _tableFrames = 500;
+    _tableFrames = 256;
     error = ExtAudioFileRead(tableAudioFileRef, (UInt32 *)&_tableFrames, _tableFilterBufferList);
     error = ExtAudioFileRead(paddleAudioFileRef, (UInt32 *)&_paddleFrames, _paddleFilterBufferList);
 
@@ -177,41 +177,56 @@ static OSStatus recordingCallback(void *inRefCon, AudioUnitRenderActionFlags *io
 
 - (void)processAudio:(AudioBufferList *)bufferList frames:(UInt32)numFrames {
     
+    // Reference to audio buffer
+    float *audioBuffer = bufferList->mBuffers[0].mData;
+    
     // Send buffer to delegate for waveform processing
     float *waveFormSamples = malloc(sizeof(float) * numFrames);
-    memcpy(waveFormSamples, bufferList->mBuffers[0].mData, sizeof(float) * numFrames);
+    memcpy(waveFormSamples, audioBuffer, sizeof(float) * numFrames);
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate didRecieveRawSamples:waveFormSamples length:numFrames];
     });
     
-    // Perform match filtering
-    [self performMatchedFilter:bufferList->mBuffers[0].mData frames:numFrames];
+    // Automatic gain control
+    [self performAutomaticGainControl:audioBuffer gain:10.0 frames:numFrames];
     
-    // Perform FFT
-    //[self performFFT:bufferList->mBuffers[0].mData frames:numFrames];
+    // Perform match filtering
+    [self performMatchedFilter:audioBuffer frames:numFrames];
+}
+
+- (void)performAutomaticGainControl:(float *)audioBuffer gain:(float)gainLevel frames:(UInt32)numFrames {
+    // Calculate gain power from decibels
+    float outputPower = powf(10, gainLevel / 10);
+    
+    // Total energy of signal
+    float energy;
+    vDSP_dotpr(audioBuffer, 1, audioBuffer, 1, &energy, numFrames);
+    
+    // Factor of multiplication
+    float k = sqrtf(outputPower * numFrames / energy);
+    
+    // Scale buffer
+    vDSP_vsmul(audioBuffer, 1, &k, audioBuffer, 1, numFrames);
 }
 
 - (void)performMatchedFilter:(float *)audioBuffer frames:(UInt32)numFrames {
-    
-    // Determine a threshold for recognition
-    _threshold = 7;
-    
     // Reference the sample buffers
     float *tableBuffer = _tableFilterBufferList->mBuffers[0].mData;
     
     // Convolute signal vector with filter
     float *convSig = malloc(sizeof(float) * (numFrames - _tableFrames));
     vDSP_conv(audioBuffer, 1, tableBuffer, 1, convSig, 1, numFrames - _tableFrames, _tableFrames);
+    
+    // Get maximum value in convoluted signal
     float convPeak;
     vDSP_maxv(convSig, 1, &convPeak, numFrames - _tableFrames);
     free(convSig);
-    
-    NSLog(@"%f", convPeak);
 
     // Inform user
     if (convPeak > _threshold) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate didHypothesizeTableHit];
+            NSLog(@"%f", convPeak);
         });
     }
 }

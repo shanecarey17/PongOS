@@ -29,7 +29,7 @@
 
 @property (weak, nonatomic) id<ListenerDelegate> delegate;
 
-@property float threshold;
+@property (atomic) NSInteger threshold;
 
 - (void)processAudio:(AudioBufferList *)buffer frames:(UInt32)numFrames;
 

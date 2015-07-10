@@ -9,6 +9,9 @@
         <mutableArray key="Courier.ttc">
             <string>Courier</string>
         </mutableArray>
+        <mutableArray key="CourierNew.ttf">
+            <string>CourierNewPSMT</string>
+        </mutableArray>
     </customFonts>
     <scenes>
         <!--View Controller-->
@@ -28,7 +31,7 @@
                                 <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="buV-0S-jEp">
+                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="buV-0S-jEp">
                                 <rect key="frame" x="20" y="28" width="560" height="50"/>
                                 <animations/>
                                 <constraints>
@@ -38,20 +41,52 @@
                                 <color key="textColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="100" maxValue="250" translatesAutoresizingMaskIntoConstraints="NO" id="6Zf-KI-6pv">
+                                <rect key="frame" x="6" y="570" width="526" height="31"/>
+                                <animations/>
+                                <color key="tintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="10k-oo-Cku"/>
+                                </constraints>
+                                <color key="minimumTrackTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="maximumTrackTintColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="thumbTintColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="threholdSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="BXq-P6-ESS"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S9h-t0-YWH" userLabel="Threshold Label">
+                                <rect key="frame" x="530" y="570" width="50" height="30"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="USa-tf-PbN"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <animations/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="XHw-af-AHv" secondAttribute="bottom" id="096-qw-UD5"/>
                             <constraint firstAttribute="leadingMargin" secondItem="buV-0S-jEp" secondAttribute="leading" id="0XP-Ku-YDZ"/>
+                            <constraint firstItem="6Zf-KI-6pv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-12" id="Cyg-kn-Noq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="XHw-af-AHv" secondAttribute="trailing" constant="-20" id="Fnx-Yl-30Z"/>
+                            <constraint firstItem="S9h-t0-YWH" firstAttribute="leading" secondItem="6Zf-KI-6pv" secondAttribute="trailing" id="Ig9-uH-Uyr"/>
                             <constraint firstItem="XHw-af-AHv" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="Tez-FY-Ubd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="S9h-t0-YWH" secondAttribute="trailing" id="YoV-ng-dsg"/>
                             <constraint firstAttribute="trailingMargin" secondItem="buV-0S-jEp" secondAttribute="trailing" id="e6T-G3-pnK"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="S9h-t0-YWH" secondAttribute="bottom" id="gP0-C1-QDR"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="6Zf-KI-6pv" secondAttribute="bottom" id="khg-K9-zTp"/>
                             <constraint firstItem="buV-0S-jEp" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="qcy-CS-kMw"/>
                             <constraint firstItem="XHw-af-AHv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="wfa-Wc-7qb"/>
+                            <constraint firstItem="S9h-t0-YWH" firstAttribute="height" secondItem="6Zf-KI-6pv" secondAttribute="height" id="x4q-hu-dYZ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="rallyLabel" destination="buV-0S-jEp" id="KBA-QP-2tZ"/>
+                        <outlet property="thresholdLabel" destination="S9h-t0-YWH" id="beH-jH-foF"/>
+                        <outlet property="thresholdSlider" destination="6Zf-KI-6pv" id="BRR-Lm-eeb"/>
                         <outlet property="waveFormView" destination="XHw-af-AHv" id="Fe1-jz-AKq"/>
                     </connections>
                 </viewController>

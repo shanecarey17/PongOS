@@ -20,6 +20,10 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *rallyLabel;
 
+@property (weak, nonatomic) IBOutlet UISlider *thresholdSlider;
+
+@property (weak, nonatomic) IBOutlet UILabel *thresholdLabel;
+
 @property (strong, nonatomic) Listener *listener;
 
 @end
